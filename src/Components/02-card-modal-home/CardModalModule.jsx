@@ -1,73 +1,80 @@
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../index"
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 const CardModalModule = () => {
-    const dataCard = document.querySelector("#dataCard")
+    // const dataCard = document.querySelector("#dataCard")
+    const [tarjetas, setTarjetas] = useState([])
     useEffect(() => {
-        extrae()
-    })
-    const extrae = async () => {
-        try {
-            const querySnapshot = await getDocs(collection(db, "fotos-cargadas"));
-            dataCard.innerHTML = ""
-            querySnapshot.forEach((doc) => {
-                console.log(doc.data());
-                dataCard.innerHTML += `
-                <div class="col-sm-4">
-                    <div class="card border-0 shadow mt-3">
-                        <div class="card-body">
-                            <div class="alto-div-img">
-                                <img src=${doc.data().rutaImagen} alt="${doc.data().nombreImagen}" class="img-thumbnail" />
-                            </div>
-                            <p></p>
-                            <p class="px-5 mt-3 txt-nombre-img-card">
-                                <strong>${doc.data().nombreImagen}</strong>
-                                <br />
-                                <small class='fs-6'>Autor: ${doc.data().usuario}</small>
-                            </p>
+        const momentosTotto = collection(db, "fotos-cargadas");
+        getDocs(momentosTotto)
+            .then((resp) => {
+                setTarjetas(
+                    resp.docs.map((doc) => {
+                        return { ...doc.data(), id: doc.id }
+                    })
+                )
+            })
+    }, [])
+
+
+    console.log(tarjetas)
+
+    const display = tarjetas.map((item, i) => {
+        return (
+            <div className="col-sm-4">
+                <div className="card border-0 shadow mt-3">
+                    <div className="card-body">
+                        <div className="alto-div-img">
+                            <img src={item.rutaImagen} alt={item.nombreImagen} className="img-thumbnail" />
                         </div>
-                        <div class="card-footer border-0 text-end pb-5">
-                            <button class="btn btn-warning rounded-50" data-bs-toggle="modal" data-bs-target="#momento-totto-${doc.id}">
-                                <i class="fas fa-image"></i> Más información
-                            </button>
-                        </div>
+                        <p></p>
+                        <p className="px-5 mt-3 txt-nombre-img-card">
+                            <strong>{item.nombreImagen}</strong>
+                            <br />
+                            <small className='fs-6'>Autor: {item.usuario}</small>
+                        </p>
                     </div>
-                    <div class="modal fade" id="momento-totto-${doc.id}" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-xl">
-                            <div class="modal-content rounded-0">
-                                <div class="modal-header border-0">
-                                    <h5 class="modal-title" id="exampleModalLabel">
-                                        <strong>${doc.data().nombreImagen}</strong>
-                                        <br />
-                                        <small>Autor: ${doc.data().usuario}</small>
-                                    </h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body border-0">
-                                    <img src="${doc.data().rutaImagen}" alt="${doc.data().nombreImagen}" class="img-thumbnail w-100" />
-                                    <p class='fecha-modal'>
-                                        ${doc.data().fechaCarga}
-                                    </p>
-                                    <p class="mt-3 px-3">
-                                        ${doc.data().descripcion}
-                                    </p>
-                                </div>
-                                <div class="modal-footer border-0">
-                                    <button type="button" class="btn btn-outline-secondary rounded-0" data-bs-dismiss="modal">Cerrar</button>
-                                </div>
+                    <div className="card-footer border-0 text-end pb-5">
+                        <button className="btn btn-warning rounded-50" data-bs-toggle="modal" data-bs-target={`#momento-totto-${i}`}>
+                            <i className="fas fa-image"></i> Más información
+                        </button>
+                    </div>
+                </div>
+                <div className="modal fade" id={`momento-totto-${i}`} tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div className="modal-dialog modal-xl">
+                        <div className="modal-content rounded-0">
+                            <div className="modal-header border-0">
+                                <h5 className="modal-title" id="exampleModalLabel">
+                                    <strong>{item.nombreImagen}</strong>
+                                    <br />
+                                    <small>Autor: {item.usuario}</small>
+                                </h5>
+                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div className="modal-body border-0">
+                                <img src={item.rutaImagen} alt={item.nombreImagen} className="img-thumbnail w-100" />
+                                <p className='fecha-modal'>
+                                    {item.fechaCarga}
+                                </p>
+                                <p className="mt-3 px-3">
+                                    {item.descripcion}
+                                </p>
+                            </div>
+                            <div className="modal-footer border-0">
+                                <button type="button" className="btn btn-outline-secondary rounded-0" data-bs-dismiss="modal">Cerrar</button>
                             </div>
                         </div>
                     </div>
                 </div>
-                `
-            })
-        } catch (error) {
-        }
-    }
+            </div>
+        )
+    })
+
 
     return (
         <>
-            <div className="row" id="dataCard">
+            <div className="row">
+                {display}
             </div>
         </>
     )
