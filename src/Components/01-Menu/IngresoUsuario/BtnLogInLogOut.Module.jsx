@@ -1,8 +1,10 @@
 import { useState } from "react";
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { dataUser } from '../../../Reducer/InfoUser/infoUserSlice'
 import { getAuth, signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
+import { NavLink } from "react-router-dom";
 const BtnLogInLogOut = () => {
+    const { displayName } = useSelector(state => state.dataUsuario)
     let dispatchUser = useDispatch()
     const [token, setToken] = useState("")
     const handleAuth = () => {
@@ -50,19 +52,30 @@ const BtnLogInLogOut = () => {
                 (() => {
                     if (!token) {
                         return (
-                            <button className="btn btn-outline-dark"
-                                onClick={handleAuth}
-                            >
-                                <i className="fas fa-sign-in-alt"></i>
-                            </button>
+                            <li className="nav-item">
+                                <button className="btn btn-sm btn-outline-dark rounded-0"
+                                    onClick={handleAuth}
+                                >
+                                    Ingresar con gmail <i class="fab fa-google text-danger"></i>
+                                </button>
+                            </li>
                         )
                     } else {
                         return (
-                            <button className="btn btn-outline-danger"
-                                onClick={handleLogout}
-                            >
-                                <i className="fas fa-sign-out-alt"></i>
-                            </button>
+                            <>
+                                <li className="nav-item">
+                                    <NavLink to="/cargar-imagenes" className="nav-link">
+                                        Cargar imagenes
+                                    </NavLink>
+                                </li>
+                                <li className="nav-item">
+                                    <button className="btn btn-sm btn-outline-danger rounded-0"
+                                        onClick={handleLogout}
+                                    >
+                                        {displayName} <i className="fas fa-sign-out-alt"></i>
+                                    </button>
+                                </li>
+                            </>
                         )
                     }
                 })()

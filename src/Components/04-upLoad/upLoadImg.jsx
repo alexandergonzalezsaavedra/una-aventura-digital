@@ -4,7 +4,10 @@ import { db } from "../../index"
 import { useState } from "react";
 import { useSelector } from "react-redux";
 const UpLoadImg = () => {
-    let { displayName } = useSelector(state => state.dataUsuario)
+    let { displayName, accessToken } = useSelector(state => state.dataUsuario)
+    if (accessToken === "") {
+        window.location.replace("/")
+    }
     const [rutaImg, setRutaImg] = useState("")
     const stateUploadImage = {
         picture: rutaImg
@@ -60,82 +63,92 @@ const UpLoadImg = () => {
         document.querySelector("#cargarNuevaImagen").classList.remove("d-none")
     }
     return (
-        <section className="cont-formulario-carga py-5">
-            <div className="container">
-                <h3 className="text-center mb-5">
-                    Comparte tus experiencias
-                </h3>
-                <div className="row">
-                    <div className="col-sm-6">
-                        <div className="bg-light p-5" id="formularioImagenes">
-                            <form onSubmit={handleUploadImage}>
-                                <label className="form-label">Seleccione una imagen</label>
-                                <input type="file" id="imagenCargada" className="form-control shadow border border-1 rounded-0" onChange={handleUpload} required />
-                                <br />
-                                <label className="form-label">Nombre de la imagen</label>
-                                <input type="text" id="nombreImagen" className="form-control shadow border border-1 rounded-0" required />
-                                <br />
-                                <label className="form-label">Descripción de la imagen</label>
-                                <textarea className="form-control shadow border border-1 rounded-0" rows="5" id="descripcionImagen" name="text" required></textarea>
-                                <br />
-                                <button className="btn btn-primary w-100 rounded-0">
-                                    Enviar
-                                </button>
-                            </form>
-                        </div>
-                        <div className="d-none p-5" id="cargarNuevaImagen">
-                            <div className="alert alert-info w-100 text-center" role="alert">
-                                La imagen se cargo con exito
-                            </div>
-                            <br />
-                            <button className="btn btn-primary w-100" onClick={nuevaImagen}>
-                                Cargar Nueva imagen
-                            </button>
-                        </div>
-                    </div>
-                    <div className="col-sm-6">
-                        {
-                            (() => {
-                                if (stateUploadImage.picture === "") {
-                                    return (
-                                        <>
-                                            <div className="alert alert-warning text-center" role="alert">
-                                                Cargue una imagen a la galeria
-                                            </div>
-                                        </>
-                                    )
-                                } else {
-                                    return (
-                                        <>
-                                            <div className="card">
-                                                <div className="card-header bg-light">
-                                                    <p className="fs-4 text-center my-0">
-                                                        <strong>
-                                                            {mostrarInfo.nombreImagen}
-                                                        </strong>
-                                                    </p>
-                                                </div>
-                                                <div className="card-body">
-                                                    <div className="text-center">
-                                                        <img className="img-thumbnail mx-auto" width="350" height="auto" src={rutaImg} alt={mostrarInfo.nombreImagen} />
-                                                    </div>
+        <>
+            {
+                (() => {
+                    if (accessToken === "") {
+                        return
+                    } else {
+                        return (
+                            <section className="cont-formulario-carga py-5">
+                                <div className="container">
+                                    <h3 className="text-center mb-5">
+                                        Comparte tus experiencias
+                                    </h3>
+                                    <div className="row">
+                                        <div className="col-sm-6">
+                                            <div className="bg-light p-5" id="formularioImagenes">
+                                                <form onSubmit={handleUploadImage}>
+                                                    <label className="form-label">Seleccione una imagen</label>
+                                                    <input type="file" id="imagenCargada" className="form-control shadow border border-1 rounded-0" onChange={handleUpload} required />
                                                     <br />
-                                                    <p className="p-3">
-                                                        {mostrarInfo.descripcion}
-                                                    </p>
-                                                </div>
+                                                    <label className="form-label">Nombre de la imagen</label>
+                                                    <input type="text" id="nombreImagen" className="form-control shadow border border-1 rounded-0" required />
+                                                    <br />
+                                                    <label className="form-label">Descripción de la imagen</label>
+                                                    <textarea className="form-control shadow border border-1 rounded-0" rows="5" id="descripcionImagen" name="text" required></textarea>
+                                                    <br />
+                                                    <button className="btn btn-primary w-100 rounded-0">
+                                                        Enviar
+                                                    </button>
+                                                </form>
                                             </div>
-                                        </>
-                                    )
-                                }
-                            })()
-                        }
-                    </div>
-
-
-                </div>
-            </div>
-        </section>
+                                            <div className="d-none p-5" id="cargarNuevaImagen">
+                                                <div className="alert alert-info w-100 text-center" role="alert">
+                                                    La imagen se cargo con exito
+                                                </div>
+                                                <br />
+                                                <button className="btn btn-primary w-100" onClick={nuevaImagen}>
+                                                    Cargar Nueva imagen
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div className="col-sm-6">
+                                            {
+                                                (() => {
+                                                    if (stateUploadImage.picture === "") {
+                                                        return (
+                                                            <>
+                                                                <div className="alert alert-warning text-center" role="alert">
+                                                                    Cargue una imagen a la galeria
+                                                                </div>
+                                                            </>
+                                                        )
+                                                    } else {
+                                                        return (
+                                                            <>
+                                                                <div className="card">
+                                                                    <div className="card-header bg-light">
+                                                                        <p className="fs-4 text-center my-0">
+                                                                            <strong>
+                                                                                {mostrarInfo.nombreImagen}
+                                                                            </strong>
+                                                                        </p>
+                                                                    </div>
+                                                                    <div className="card-body">
+                                                                        <div className="text-center">
+                                                                            <img className="img-thumbnail mx-auto" width="350" height="auto" src={rutaImg} alt={mostrarInfo.nombreImagen} />
+                                                                        </div>
+                                                                        <br />
+                                                                        <p className="p-3">
+                                                                            {mostrarInfo.descripcion}
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                            </>
+                                                        )
+                                                    }
+                                                })()
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        )
+                    }
+                })()
+            }
+        </>
     )
 }
 export default UpLoadImg

@@ -1,13 +1,43 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+/* Global */
 h3 {
   font-family: "Roboto", sans-serif;
   font-weight: 400;
+}
+/* Nav bar */
+.nav-ico-google {
+  width: 30px;
+  height: 30px;
 }
 .w-logo-menu {
   display: table;
   width: 130;
   height: 28px;
 }
+.nav-link {
+  padding: 5px 15px;
+  margin: 0 10px;
+}
+.nav-link.active {
+  font-weight: 600;
+}
+/* Inicio */
+.cont-home {
+  background: #e9eaee;
+  background-size: cover;
+}
+.cont-home .card-body .alto-div-img {
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  height: 140px;
+  min-height: 140px;
+}
+.txt-nombre-img-card {
+  min-height: 50px;
+  max-height: 50px;
+}
+/* Pagina cargar imagenes */
 .cont-formulario-carga {
   min-height: 100vh;
   background: url("./Img/formulario-carga/el-cuerpo-banner-fondo.jpg") no-repeat;
