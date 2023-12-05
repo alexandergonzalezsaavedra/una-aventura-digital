@@ -1,6 +1,8 @@
 import Menu from "./Components/01-Menu/Menu.Module"
 import UpLoadImg from "./Components/04-upLoad/upLoadImg";
-const App = () => {
+// Firebase
+
+const App = ({ db }) => {
   return (
     <>
       <Menu />
