@@ -31,7 +31,7 @@ h3 {
   position: relative;
   overflow: hidden;
   height: 140px;
-  min-height: 140px;
+  min-height: 180px;
 }
 .txt-nombre-img-card {
   min-height: 50px;

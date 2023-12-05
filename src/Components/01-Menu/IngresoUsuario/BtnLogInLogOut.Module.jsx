@@ -56,7 +56,7 @@ const BtnLogInLogOut = () => {
                                 <button className="btn btn-sm btn-outline-dark rounded-0"
                                     onClick={handleAuth}
                                 >
-                                    Ingresar con gmail <i class="fab fa-google text-danger"></i>
+                                    Ingresar con gmail <i className="fab fa-google text-danger"></i>
                                 </button>
                             </li>
                         )
@@ -65,7 +65,7 @@ const BtnLogInLogOut = () => {
                             <>
                                 <li className="nav-item">
                                     <NavLink to="/cargar-imagenes" className="nav-link">
-                                        Cargar imagenes
+                                        Cargar momentos
                                     </NavLink>
                                 </li>
                                 <li className="nav-item">
