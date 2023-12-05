@@ -31,6 +31,13 @@ const BtnLogInLogOut = () => {
     }
     const handleLogout = () => {
         const auth = getAuth();
+        dispatchUser(dataUser({
+            uid: "",
+            email: "",
+            displayName: "",
+            photoURL: "",
+            accessToken: ""
+        }))
         signOut(auth).then(() => {
             setToken("")
         }).catch((error) => {
@@ -63,5 +70,4 @@ const BtnLogInLogOut = () => {
         </>
     )
 }
-
 export default BtnLogInLogOut

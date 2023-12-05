@@ -1,7 +1,9 @@
 import React from 'react'
+import { useSelector } from 'react-redux';
 import IconoTotto from './icono/icono.Module'
 import BtnLogInLogOut from './IngresoUsuario/BtnLogInLogOut.Module'
 const Menu = () => {
+    const { displayName } = useSelector(state => state.dataUsuario)
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
             <div className="container">
@@ -15,12 +17,10 @@ const Menu = () => {
                     <div className="d-flex justify-content-end w-100">
                         <ul className="navbar-nav">
                             <li className="nav-item">
-                                <a href="/" className="nav-link" rel="noreferrer">
-                                    Inicio
-                                </a>
+                                <div className="nav-link">
+                                    {displayName === "" ? "Ingresa con google" : displayName}
+                                </div>
                             </li>
-                        </ul>
-                        <ul className="navbar-nav">
                             <li className="nav-item">
                                 <BtnLogInLogOut />
                             </li>
