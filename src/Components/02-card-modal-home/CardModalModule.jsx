@@ -1,8 +1,9 @@
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../index"
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 const CardModalModule = () => {
-    // const dataCard = document.querySelector("#dataCard")
+    let {bNombre,bCategoria} = useSelector(state => state.dataFiltro)
     const [tarjetas, setTarjetas] = useState([])
     useEffect(() => {
         const momentosTotto = collection(db, "fotos-cargadas");
@@ -16,27 +17,43 @@ const CardModalModule = () => {
             })
     }, [])
 
+    console.log(bNombre + "  " + bCategoria)
+    let resFiltro
+    if(!bNombre && !bCategoria){
+        resFiltro = tarjetas
+    }else{
+        resFiltro = tarjetas.filter((dato) => {
+            return(
+                dato.nombreImagen.normalize("NFD").replace(/[\u0300-\u036f\u00E0-\u00FC]/g, '').toLowerCase().includes(bNombre.replace(/[\u0300-\u036f\u00E0-\u00FC]/g, '').toLocaleLowerCase())
+                //&&
+                //dato.categoria.normalize("NFD").replace(/[\u0300-\u036f\u00E0-\u00FC]/g, '').toLowerCase().includes(bCategoria.replace(/[\u0300-\u036f\u00E0-\u00FC]/g, '').toLocaleLowerCase())
+            )
+        })
+    }
 
-    console.log(tarjetas)
-
-    const display = tarjetas.map((item, i) => {
+    const display = resFiltro.map((item, i) => {
         return (
-            <div className="col-sm-4">
+            <div key={i} className="col-sm-4">
                 <div className="card border-0 shadow mt-3">
                     <div className="card-body">
                         <div className="alto-div-img">
                             <img src={item.rutaImagen} alt={item.nombreImagen} className="img-thumbnail" />
                         </div>
-                        <p></p>
+                        <small>
+
+                        </small>
                         <p className="px-5 mt-3 txt-nombre-img-card">
                             <strong>{item.nombreImagen}</strong>
                             <br />
                             <small className='fs-6'>Autor: {item.usuario}</small>
                         </p>
                     </div>
-                    <div className="card-footer border-0 text-end pb-5">
-                        <button className="btn btn-warning rounded-50" data-bs-toggle="modal" data-bs-target={`#momento-totto-${i}`}>
-                            <i className="fas fa-image"></i> Más información
+                    <div className="card-footer border-0 py-4 d-flex justify-content-between">
+                        <button className="btn btn-outline-danger rounded-circle border-0">
+                            <i className="fas fa-heart"></i>
+                        </button>
+                        <button className="btn btn-outline-warning rounded-circle border-0" data-bs-toggle="modal" data-bs-target={`#momento-totto-${i}`}>
+                        <i className="fas fa-plus-circle text-dark"></i>
                         </button>
                     </div>
                 </div>
@@ -69,8 +86,6 @@ const CardModalModule = () => {
             </div>
         )
     })
-
-
     return (
         <>
             <div className="row">
@@ -79,5 +94,4 @@ const CardModalModule = () => {
         </>
     )
 }
-
 export default CardModalModule
