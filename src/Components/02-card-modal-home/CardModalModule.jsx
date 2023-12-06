@@ -2,6 +2,7 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../index"
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import ReactPaginate from 'react-paginate';
 const CardModalModule = () => {
     let {bNombre,bCategoria} = useSelector(state => state.dataFiltro)
     const [tarjetas, setTarjetas] = useState([])
@@ -30,10 +31,12 @@ const CardModalModule = () => {
             )
         })
     }
-
-    const display = resFiltro.map((item, i) => {
-        return (
-            <div key={i} className="col-sm-4">
+    function Items({ currentItems }) {
+    return (
+        <>
+        {currentItems &&
+            currentItems.map((item,i) => (
+                <div key={i} className="col-sm-4">
                 <div className="card border-0 shadow mt-3">
                     <div className="card-body">
                         <div className="alto-div-img">
@@ -84,12 +87,52 @@ const CardModalModule = () => {
                     </div>
                 </div>
             </div>
-        )
-    })
+            ))}
+        </>
+    );
+    }
+
+    function PaginatedItems({ itemsPerPage }) {
+        const [itemOffset, setItemOffset] = useState(0);
+        const endOffset = itemOffset + itemsPerPage;
+        console.log(`Loading items from ${itemOffset} to ${endOffset}`);
+        const currentItems = resFiltro.slice(itemOffset, endOffset);
+        const pageCount = Math.ceil(resFiltro.length / itemsPerPage);
+        const handlePageClick = (event) => {
+          const newOffset = (event.selected * itemsPerPage) % resFiltro.length;
+          console.log(
+            `User requested page number ${event.selected}, which is offset ${newOffset}`
+          );
+          setItemOffset(newOffset);
+        };
+        return (
+          <>
+            <Items currentItems={currentItems} />
+            <ReactPaginate
+              breakLabel="..."
+              nextLabel=">"
+              onPageChange={handlePageClick}
+              pageRangeDisplayed={3}
+              pageCount={pageCount}
+              previousLabel="<"
+              renderOnZeroPageCount={null}
+              className="pagination d-flex justify-content-center mt-5"
+              pageClassName="page-item"
+              pageLinkClassName="page-link"
+              activeClassName="active"
+              previousClassName="page-item"
+              nextClassName="page-item"
+              previousLinkClassName="page-link"
+              nextLinkClassName="page-link"
+            />
+          </>
+        );
+      }
+
     return (
         <>
             <div className="row">
-                {display}
+                <PaginatedItems itemsPerPage={8} />
             </div>
         </>
     )
