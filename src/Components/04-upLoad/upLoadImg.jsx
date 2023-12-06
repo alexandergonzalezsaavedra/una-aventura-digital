@@ -4,6 +4,7 @@ import { db } from "../../index"
 import { useState } from "react";
 import { useSelector } from "react-redux";
 const UpLoadImg = () => {
+    const bCategorias = ["Mascotas","Paisajes","Deportes","Personas","Navidad","Vacaciones","Lugares"]
     let { displayName, accessToken } = useSelector(state => state.dataUsuario)
     if (accessToken === "") {
         window.location.replace("/")
@@ -28,6 +29,7 @@ const UpLoadImg = () => {
         document.querySelector("#imagenCargada").value = ""
         document.querySelector("#nombreImagen").value = ""
         document.querySelector("#descripcionImagen").value = ""
+        document.querySelector("#bCategoriaCargar").value = ""
     }
     const handleUploadImage = async (e) => {
         e.preventDefault()
@@ -43,8 +45,9 @@ const UpLoadImg = () => {
                         fechaCarga: snapshot.metadata.updated,
                         descripcion: document.querySelector("#descripcionImagen").value,
                         comentarios: [],
+                        categoria: document.querySelector("#bCategoriaCargar").value
                     }
-                    const colleccion = collection(db, "fotos-cargadas")
+                    const colleccion = collection(db, "momentos-compartidos")
                     addDoc(colleccion, nuevaInfo)
                     setMostrarInfo({
                         usuario: displayName,
@@ -53,6 +56,7 @@ const UpLoadImg = () => {
                         fechaCarga: snapshot.metadata.updated,
                         descripcion: document.querySelector("#descripcionImagen").value,
                         comentarios: [],
+                        categoria: document.querySelector("#bCategoriaCargar").value
                     })
                 })
                 .catch((error) => {
@@ -84,6 +88,21 @@ const UpLoadImg = () => {
                                                     <br />
                                                     <label className="form-label">Nombre de la imagen</label>
                                                     <input type="text" id="nombreImagen" className="form-control shadow border border-1 rounded-0" required />
+                                                    <br />
+                                                    <label className="form-label">Categoría</label>
+                                                    <select 
+                                                        className='form-select'
+                                                        id="bCategoriaCargar"
+                                                    >
+                                                        <option value="">Seleccione una Categoría</option>
+                                                        {
+                                                            bCategorias.sort().map((item,index) => {
+                                                                return(
+                                                                    <option key={index} value={`${item}`}>{item}</option>
+                                                                )
+                                                            })
+                                                        }
+                                                    </select>
                                                     <br />
                                                     <label className="form-label">Descripción de la imagen</label>
                                                     <textarea className="form-control shadow border border-1 rounded-0" rows="5" id="descripcionImagen" name="text" required></textarea>

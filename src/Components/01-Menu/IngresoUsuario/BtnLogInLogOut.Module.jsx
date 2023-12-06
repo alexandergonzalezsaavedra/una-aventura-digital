@@ -64,6 +64,11 @@ const BtnLogInLogOut = () => {
                         return (
                             <>
                                 <li className="nav-item">
+                                    <NavLink to="/" className="nav-link">
+                                        Ver galeria
+                                    </NavLink>
+                                </li>
+                                <li className="nav-item">
                                     <NavLink to="/cargar-imagenes" className="nav-link">
                                         Cargar momentos
                                     </NavLink>

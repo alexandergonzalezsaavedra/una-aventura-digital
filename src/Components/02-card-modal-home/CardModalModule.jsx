@@ -7,7 +7,7 @@ const CardModalModule = () => {
     let {bNombre,bCategoria} = useSelector(state => state.dataFiltro)
     const [tarjetas, setTarjetas] = useState([])
     useEffect(() => {
-        const momentosTotto = collection(db, "fotos-cargadas");
+        const momentosTotto = collection(db, "momentos-compartidos");
         getDocs(momentosTotto)
             .then((resp) => {
                 setTarjetas(
@@ -26,8 +26,8 @@ const CardModalModule = () => {
         resFiltro = tarjetas.filter((dato) => {
             return(
                 dato.nombreImagen.normalize("NFD").replace(/[\u0300-\u036f\u00E0-\u00FC]/g, '').toLowerCase().includes(bNombre.replace(/[\u0300-\u036f\u00E0-\u00FC]/g, '').toLocaleLowerCase())
-                //&&
-                //dato.categoria.normalize("NFD").replace(/[\u0300-\u036f\u00E0-\u00FC]/g, '').toLowerCase().includes(bCategoria.replace(/[\u0300-\u036f\u00E0-\u00FC]/g, '').toLocaleLowerCase())
+                &&
+                dato.categoria.normalize("NFD").replace(/[\u0300-\u036f\u00E0-\u00FC]/g, '').toLowerCase().includes(bCategoria.replace(/[\u0300-\u036f\u00E0-\u00FC]/g, '').toLocaleLowerCase())
             )
         })
     }
@@ -55,8 +55,8 @@ const CardModalModule = () => {
                         <button className="btn btn-outline-danger rounded-circle border-0">
                             <i className="fas fa-heart"></i>
                         </button>
-                        <button className="btn btn-outline-warning rounded-circle border-0" data-bs-toggle="modal" data-bs-target={`#momento-totto-${i}`}>
-                        <i className="fas fa-plus-circle text-dark"></i>
+                        <button className="btn btn-outline-dark rounded-circle border-0" data-bs-toggle="modal" data-bs-target={`#momento-totto-${i}`}>
+                        <i className="fas fa-plus"></i>
                         </button>
                     </div>
                 </div>
@@ -91,7 +91,6 @@ const CardModalModule = () => {
         </>
     );
     }
-
     function PaginatedItems({ itemsPerPage }) {
         const [itemOffset, setItemOffset] = useState(0);
         const endOffset = itemOffset + itemsPerPage;
@@ -117,22 +116,21 @@ const CardModalModule = () => {
               previousLabel="<"
               renderOnZeroPageCount={null}
               className="pagination d-flex justify-content-center mt-5"
-              pageClassName="page-item"
-              pageLinkClassName="page-link"
-              activeClassName="active"
-              previousClassName="page-item"
-              nextClassName="page-item"
-              previousLinkClassName="page-link"
-              nextLinkClassName="page-link"
+              pageClassName="page-item rounded-circle"
+              pageLinkClassName="page-link rounded-circle"
+              activeClassName="active rounded-circle"
+              previousClassName="page-item rounded-circle"
+              nextClassName="page-item rounded-circle"
+              previousLinkClassName="page-link rounded-circle"
+              nextLinkClassName="page-link rounded-circle"
             />
           </>
         );
       }
-
     return (
         <>
             <div className="row">
-                <PaginatedItems itemsPerPage={8} />
+                <PaginatedItems itemsPerPage={6} />
             </div>
         </>
     )

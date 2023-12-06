@@ -4,7 +4,7 @@ import {setFiltroData} from '../../Reducer/FiltroInfo/FiltroSlice'
 const FiltroModule = () => {
     let dispatchFiltro = useDispatch()
     const initialState = {bNombre: "", bCategoria:""}
-    const bCategorias = ["Mascotas","Paisajes"]
+    const bCategorias = ["Mascotas","Paisajes","Deportes","Personas","Navidad","Vacaciones","Lugares"]    
     const [campos,setCampos] = useState(initialState)
     let {bNombre, bCategoria} = campos
     const handleChangeB = (e) => {
