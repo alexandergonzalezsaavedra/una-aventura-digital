@@ -5,6 +5,8 @@ import { useSelector } from "react-redux";
 import ReactPaginate from 'react-paginate';
 const CardModalModule = () => {
     let { bNombre, bCategoria } = useSelector(state => state.dataFiltro)
+    let { photoURL, displayName, accessToken } = useSelector(state => state.dataUsuario)
+
     const [tarjetas, setTarjetas] = useState([])
     const momentosTotto = collection(db, "momentos-compartidos");
     useEffect(() => {
@@ -104,12 +106,32 @@ const CardModalModule = () => {
             </>
         );
     }
-
     // Modales
     let modalMomento = resFiltro.map((modal, idModal) => {
         let { nombreImagen, rutaImagen, usuario, fechaCarga, descripcion, comentarios, id } = modal
+        let displayComentariosModal = comentarios.map((comentario, iComentario) => {
 
-
+            return (
+                <li key={iComentario} className="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        {
+                            (() => {
+                                if (displayName === "") {
+                                    return
+                                } else {
+                                    <>
+                                        <small>Comentario de {displayName}</small>
+                                        <br />
+                                    </>
+                                }
+                            })()
+                        }
+                        {comentario.mensaje}
+                    </div>
+                    <img src={photoURL} alt={displayName} className="badge badge-primary badge-pill" />
+                </li>
+            )
+        })
         const d = new Date();
         const anio = d.getFullYear();
         const mes = d.getMonth() + 1;
@@ -118,6 +140,11 @@ const CardModalModule = () => {
         const minutos = d.getMinutes();
         const segundos = d.getSeconds();
         const ms = d.getMilliseconds();
+        const limpiarCampos = () => {
+            let dataComent = document.getElementById(`comentarioFotoMomento-${id}`)
+            dataComent.value = ""
+
+        }
         const handleSubmitComent = async (e) => {
             let idComentario = `${anio}-${mes}-${dia}-h${hora}-${minutos}-${segundos}-${ms}`
             e.preventDefault()
@@ -131,18 +158,9 @@ const CardModalModule = () => {
             }
             agregar()
             updateDoc(usuariosRef, { comentarios: listaComentarios });
+            console.log(listaComentarios)
+            limpiarCampos()
         }
-        let displayComentarios = comentarios.map((comentario, iComentario) => {
-            return (
-                <div className="card" key={iComentario}>
-                    <div className="card-body">
-                        <p >
-                            {comentario.mensaje}
-                        </p>
-                    </div>
-                </div>
-            )
-        })
         return (
             <div key={idModal} className="modal fade" id={`momento-totto-${idModal}`} tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div className="modal-dialog modal-xl">
@@ -161,41 +179,69 @@ const CardModalModule = () => {
                                 {fechaCarga}
                             </p>
                             <p className="mt-3 px-3">
-                                {descripcion}
+                                {
+                                    (() => {
+                                        if (comentarios.change) {
+                                            return (
+                                                { descripcion }
+                                            )
+                                        }
+                                    })()
+                                }
                             </p>
                             <div className="bg-light p-3">
                                 <h3 className="text-warning">
                                     Comentarios
                                 </h3>
-
                                 <hr className="mb-5" />
                                 <div className="container p-5">
                                     <div className="row d-flex justify-content-center">
                                         <div className="col-sm-8">
-                                            {displayComentarios}
+                                            <div id="zonaComentarios">
+                                                <div id="zonaComentarios">
+                                                    <ul className="list-group">
+                                                        {displayComentariosModal}
+                                                    </ul>
+                                                </div>
+                                            </div>
                                         </div>
                                         <div className="col-sm-4">
-                                            <h3>
-                                                Dejanos tu comentario
-                                            </h3>
-                                            <form id={id} onSubmit={handleSubmitComent}>
-                                                <div className="row">
-                                                    <textarea
-                                                        rows="5"
-                                                        cols="30"
-                                                        id={`comentarioFotoMomento-${id}`}
-                                                        name={`comentarioFotoMomento-${id}`}
-                                                    >
-                                                    </textarea>
-                                                </div>
-                                                <div className="row">
-                                                    <button
-                                                        className="btn btn-outline-dark"
-                                                    >
-                                                        Enviar
-                                                    </button>
-                                                </div>
-                                            </form>
+                                            {
+                                                (() => {
+                                                    if (!accessToken) {
+                                                        return (
+                                                            <p>
+                                                                Por favor ingrese con su usuario para dejar un comentario
+                                                            </p>
+                                                        )
+                                                    } else {
+                                                        return (
+                                                            <>
+                                                                <h3>
+                                                                    Dejanos tu comentario
+                                                                </h3>
+                                                                <form id={id} onSubmit={handleSubmitComent}>
+                                                                    <div className="row">
+                                                                        <textarea
+                                                                            rows="5"
+                                                                            cols="30"
+                                                                            id={`comentarioFotoMomento-${id}`}
+                                                                        >
+                                                                        </textarea>
+                                                                    </div>
+                                                                    <div className="row">
+                                                                        <button
+                                                                            className="btn btn-outline-dark"
+                                                                        >
+                                                                            Enviar
+                                                                        </button>
+                                                                    </div>
+                                                                </form>
+                                                            </>
+                                                        )
+                                                    }
+                                                })()
+                                            }
                                         </div>
                                     </div>
                                 </div>
